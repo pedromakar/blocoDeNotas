@@ -1,31 +1,43 @@
-// Espera o conteúdo da página carregar completamente antes de executar o script.
-// É uma boa prática para evitar erros de JavaScript tentando acessar elementos
-// que ainda não existem na página.
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 1. SELECIONANDO OS ELEMENTOS
     const blocoDeNotas = document.getElementById('blocoDeNotas');
     const btnLimparNotas = document.getElementById('btnlimparNotas');
     const btnSalvarNotas = document.getElementById('btnSalvarNotas');
+    const btnAlternarTema = document.getElementById('btnAlternarTema');
+    const body = document.body;
 
-    // 2. CARREGANDO DADOS DO LOCALSTORAGE
+    // Carregando nota salva
     const notaSalva = localStorage.getItem('minhaNota');
-
     if (notaSalva) {
         blocoDeNotas.value = notaSalva;
     }
 
-    // 3. EVENTO PARA LIMPAR A NOTA
+    // Salvando nota
+    btnSalvarNotas.addEventListener('click', () => {
+        localStorage.setItem('minhaNota', blocoDeNotas.value);
+        console.log("Nota salva no localStorage!");
+    });
+
+    // Limpando nota
     btnLimparNotas.addEventListener('click', () => {
         blocoDeNotas.value = '';
         localStorage.removeItem('minhaNota');
         console.log("Nota removida do localStorage.");
     });
 
-    // 4. EVENTO PARA SALVAR A NOTA
-    btnSalvarNotas.addEventListener('click', () => {
-        localStorage.setItem('minhaNota', blocoDeNotas.value);
-        console.log("Nota salva no localStorage!");
+    // Alternar entre claro e escuro
+    btnAlternarTema.addEventListener('click', () => {
+        body.classList.toggle('modo-escuro');
+
+        // Salva a preferência no localStorage
+        const modoAtual = body.classList.contains('modo-escuro') ? 'escuro' : 'claro';
+        localStorage.setItem('temaPreferido', modoAtual);
     });
+
+    // Aplica o tema salvo
+    const temaSalvo = localStorage.getItem('temaPreferido');
+    if (temaSalvo === 'escuro') {
+        body.classList.add('modo-escuro');
+    }
 
 });
